@@ -1,12 +1,32 @@
-### <font color="red">人脸识别综述</font>[<font color="Red" size=3>(19 -Deep Face Recognition: A Survey)</font>](https://arxiv.org/abs/1804.06655)
+- [人脸识别综述](#人脸识别综述)
+  - [概述](#概述)
+  - [面部预处理](#面部处理)
+  - [损失函数](#损失函数)
+  - [网络结构](#网络结构)
+  - [面部匹配](#面部匹配)
+  - [数据集](#数据集)
+  - [评估任务和性能指标](#评估任务和性能指标)
+  - [应用场景](#应用场景)
+- [人脸检测论文调研](#人脸检测论文调研)
+  - [RetinaFace - SOTA](#RetinaFace)
+
+
+
+<br><br><br>
+
+
+
+## 人脸识别综述
+
+[<font color="Red" size=3>19 -Deep Face Recognition: A Survey</font>](https://arxiv.org/abs/1804.06655)
 
 人脸识别的四个发展阶段
 
 <img src="face research/5.jpg" width="1000px">
 
+<br>
 
-
-##### <font color="blue" size=4>**概述**</font>
+#### 概述
 
 - 人脸识别各个模块
   - 人脸检测 - 定位存在人脸的位置
@@ -34,9 +54,7 @@
 - **损失函数 loss function**：通常intra-variations > inter-variations，softmax能学到可分特征，但是通常无法学习有足够区分度的特征，因此FR也聚焦于损失函数，即metric learning
 
   - Euclidean-distance-based loss：基于欧几里得距离增加组间距离、减小组内距离
-
   - angular/cosine-margin-based loss
-
   - softmax loss
 
 - **面部匹配 face matching**
@@ -49,7 +67,9 @@
 
 <img src="face research/7.jpg" width="500px">
 
-##### <font color="blue" size=4>**面部处理（face processing）**</font>
+<br>
+
+#### 面部处理
 
 - **One-to-many Augmentation**
 
@@ -79,7 +99,9 @@
 
   - CNN、GAN等
 
-##### <font color="blue" size=4>**损失函数（metric learning）**</font>
+<br>
+
+#### 损失函数
 
 <img src="face research/8.jpg" width="1000px">
 
@@ -130,43 +152,43 @@
     令原始的Softmax loss中$f_j=||W_j||x_j||cos(\theta_j)$，同时增大$y_i$对应的项的权重可得到Large-margin softmax。该权重$m$引入了multiplicative angular/cosine margin
 
     <img src="face research/10.jpg" width="500px">
-  
+
     其中
-  
+
     <img src="face research/11.jpg" width="550px">
-  
+
     二分类的分类平面为：$||x||(||W_1||cos(m\theta_1)-||W_2||cos(\theta_2))>0$
-  
+
     <img src="face research/9.jpg" width="400px">
-  
+
     L-softmax存在问题：收敛比较困难，$||W_1||,||W_2||$通常也不等
-  
+
   - A-softmax (SphereFace)
-  
+
     在L-softmax的基础上，将权重$L_2$正则化得到$||W||=1$，因此正则化后的权重落在一个超球体上
-  
+
     <img src="face research/13.jpg" width="300px">
-  
+
     二分类的分类超平面为：$||x||(cos(m\theta_1)-cos(\theta_2))=0$
-  
+
     <img src="face research/12.jpg" width="500px">
-  
+
   - CosFace / ArcFace
-  
+
     与A-softmax相同思想，但CosFace/ArcFace引入的是additive angular/cosine margin
-    
+
     CosFace：<img src="face research/14.jpg" width="400px">
-    
+
     CosFace二分类的分类超平面为：$\widehat{x}(cos\theta_1-m-cos\theta_2)=0$
-    
+
     ArcFace：<img src="face research/15.jpg" width="400px">
-    
+
     ArcFace二分类的分类超平面：$\widehat{x}(cos(\theta_1+m)-cos\theta_2)=0$
-    
+
     其中 $s=||x||$
-  
+
   - 对比
-  
+
     | 损失函数                  | 决策边界                                            |
     | ------------------------- | --------------------------------------------------- |
     | Softmax                   | $(W_1-W_2)x+b_1-b_2=0$                              |
@@ -174,20 +196,20 @@
     | A-softmax<br>(SphereFace) | $||x||(cos(m\theta_1)-cos(\theta_2))=0$             |
     | CosineFace                | $\widehat{x}(cos\theta_1-m-cos\theta_2)=0$          |
     | ArcFace                   | $\widehat{x}(cos(\theta_1+m)-cos\theta_2)=0$        |
-  
-    <img src="face research/16.jpg" width="500px">
-  
-    <img src="face research/8.jpg" width="1000px">
-    
-  - **Feature normalization（蓝色）**
-  
-    这类方法对softmax中的特征向量或者权重进行正则化，即：$\widehat{W}=\frac{W}{||W||},\widehat{x}=\alpha\frac{x}{||x||}$
-  
-    Feature normalization需要与其他损失函数共同使用，以达到最佳效果
-    
-    
 
-##### <font color="blue" size=4>**网路结构 (Network architecture)**</font>
+    <img src="face research/16.jpg" width="500px">
+
+    <img src="face research/8.jpg" width="1000px">
+
+  - **Feature normalization（蓝色）**
+
+    这类方法对softmax中的特征向量或者权重进行正则化，即：$\widehat{W}=\frac{W}{||W||},\widehat{x}=\alpha\frac{x}{||x||}$
+
+    Feature normalization需要与其他损失函数共同使用，以达到最佳效果
+
+<br>
+
+#### 网络结构
 
 网络结构包括两方面：
 
@@ -240,12 +262,12 @@
   在某些情景中，人脸识别是主要任务，若需要同时完成姿态估计、表情估计、人脸对齐、笑容检测、年龄估计等其余任务时，可以使用multi-task组装网。
 
   如下图Deep Residual EquivAriant Mapping ([DREAM](http://openaccess.thecvf.com/content_cvpr_2018/html/Cao_Pose-Robust_Face_Recognition_CVPR_2018_paper.html))模块，用于特征层次的人脸对齐
-  
+
   <img src="face research/20.jpg" width="650px">
 
+<br>
 
-
-##### <font color="blue" size=4>**面部匹配 (Face matching)**</font>
+#### 面部匹配
 
 在测试阶段，通常使用余弦距离和L2距离来度量两个通过网络提取的深度特征$x_1,x_1$的相似性，再通过阈值比较threshold comparison进行面部验证face verification，通过最近邻分类器nearest neighbor classifier进行面部识别face identification
 
@@ -257,9 +279,9 @@
 
   1:N
 
+<br>
 
-
-##### <font color="blue" size=4>**数据集 (Datasets)**</font>
+#### 数据集
 
 <img src="face research/21.jpg" width="680px">
 
@@ -295,19 +317,17 @@
 
   另外，人口群体分布不均也会产生data bias，如人种、性别、年龄。通常女性、黑人、年轻群体更难识别。
 
+<br>
 
-
-##### <font color="blue" size=4>**Evaluation tasks and performance metrics**</font>
+#### 评估任务和性能指标
 
 - **training protocols**
-
   - subject-dependent protocol：所有用于测试的图像中的ID已在训练集中存在，FR即一个特征可分的分类问题（不同人脸视为不同标签，为测试图像预测标签）。这一protocol仅适用于早期FR研究和小数据集。
-
   - subject-independent protocol：测试图像中的ID可能未在训练集中存在。这一protocol的关键是模型需要学得有区分度的深度特征表示
 
 <img src="face research/25.jpg" width="1000px">
 
--  **Evaluation metric**
+- **Evaluation metric**
 
   - Face verification：性能评价指标通常为受试者操作特性曲线(ROC - Receiver operating characteric)，以及平均准确度(ACC)
 
@@ -323,87 +343,137 @@
 
   - Open-set face identification：
 
+<br>
 
-
-##### <font color="blue" size=4>**FR应用场景**</font>
+#### 应用场景
 
 - **Cross-Factor Face Recognition**
   - Cross-Pose：正脸、侧脸，可使用one-to-many augmentation、many-to-one normalizations、multi-input networks、multi-task learning加以缓解
   - Cross-Age
   - Makeup
-
 - **Heterogenous Face Recognition**
-
   - NIS-VIS FR：低光照环境中NIR (near-infrared spectrum 近红外光谱)成像好，因此识别NIR图像也是一大热门话题。但大多数数据集都是VIS (visual ligtht spectrum可见光光谱)图像。-- 迁移学习
   - Low-Resolution FR：聚焦提高低分辨率图像的FR性能
-
   - Phote-Sketch FR：聚焦人脸图像、素描间的转换。 -- 迁移学习、image2image学习
-
 - **Multiple (or single) media Face Recognition**
   - Low-Shot FR：实际场景中，FR系统通常训练集样本很少(甚至单张)
   - Set/Template-based FR
   - Video FR：两个关键点，1. 各帧信息整合，2. 高模糊、高姿态变化、高遮挡
-
 - **Face Recognition in Industry**
   - 3D FR
   - Partial FR：给定面部的任意子区域
   - Face Anti-attack：
   - FR for Mobile Device
 
+<br>
 
+## 人脸检测论文调研
 
-### Architecture
+### RetinaFace
 
-##### [<font color="red">14cvpr - DeepFace</font>](https://www.cv-foundation.org/openaccess/content_cvpr_2014/html/Taigman_DeepFace_Closing_the_2014_CVPR_paper.html)
+[<font color="red">RetinaFace: Single-stage Dense Face Localisation in the Wild</font>](https://arxiv.org/abs/1905.00641)
 
-DeepFace: Closing the Gap to Human-level Performance in Face Verification
+- **简介**
 
-**Alignment pipeline**
+  - 不同于通用物体检测，人脸检测具有其特点：边界框的宽高比变化小，为1:1~1:1.5；但像素面积(像素尺度)变化极大，从几个像素面积到几千像素面积的均有
 
-<img src="face research/4.jpg" width="350px">
+  - 在one-stage通用物体检测方法的基础上进行改进，提出retinaface。retinaface使用多任务损失来改善检测性能：面部预测损失、边界框回归损失、五个面部关键点的回归损失、稠密面部回归（三维重建后二维投影所得与原图的距离）
 
-**DeepFace architecture**
+  - 受以往论文启发，五个面部关键点有利于较大尺度面部检测，因此本文希望引入面部关键点回归，确认是否有利于小尺度面部检测任务。另外，像素级标注信息有助于提高检测性能，但这类密集标签很难获取，因此本文引入自监督部分，确认自监督信息是否能提高检测性能，该自监督信号来自于面部三维特征估计
 
-<img src="face research/3.jpg" width="1000px">
+    <img src="face research/2.jpg" width="550px">
 
-L4~L6均为均布连接层：与卷积层类似，但是不同位置的卷积核参数不共享，因为各个特征（如嘴、鼻子、眼睛）只会出现在某些特定区域（嘴在中下方，鼻子在中间，眼睛在偏上。
+- **相关工作**
 
-[<font color="blue">15cvpr - FaceNet</font>](https://arxiv.org/abs/1503.03832)
+  - 滑动窗：在特征图每个像素点上应用长宽比、尺度不同的锚框，再检测锚框内是否存在物体，存在何种物体。
 
+  - 图像金字塔、特征金字塔：特征不断进行卷积输出尺度更小的特征图，在每层特征图上运用滑动窗口，由于特征图减小的过程中其视野不断扩大，因此每层的滑动窗可检测不同尺度下的物体
 
+    <img src="face research/26.jpg" width="400px">
 
+  - two-stage / single-stage：两阶段检测使用提名-检测的机制，先在图像上提名出可能存在的物体，再对提名区域进行检测，速度较慢。一阶段检测则是端到端机制，并使用滑动窗的思想进行物体检测，但存在类别不平衡问题（绝大多数锚框内均是背景），可使用重采样、权重调整等方法进行改善。
 
+  - 上下文建模(context modelling)：使用可变形卷积(DCN)等方法，扩大视野，加强检测性能
 
+    <img src="face research/27.jpg" width="400px">
 
-
-
-
-### <font size=6>detect</font>
-
-##### [<font color="red">19 - RetinaFace</font>](https://arxiv.org/abs/1905.00641)
-
-RetinaFace: Single-stage Dense Face Localisation in the Wild
-
-- **模型架构**
-
-  <img src="face research/1.jpg" width="1000px"><img src="face research/2.jpg" width="1000px">
+  - 多任务学习：使用多个监督信号(多个训练损失)同时训练，使得模型可以同时进行多项任务。如人脸检测+人脸对齐，物体检测+像素级分类(mask r-cnn)
 
 - **多任务损失函数**
 
-  $L=L_{cls}(p_i,p_i^*)+\lambda_1p_i^*L_{box}(t_i,t_i^*)+\lambda_2p_i^*L_{pts}(l_i,l_i^*)+\lambda_3p_i^*L_{pixel},      \lambda_{1,2,3}=0.24, 0.1, 0.01$
+  联合损失：$L=L_{cls}(p_i,p_i^*)+\lambda_1p_i^*L_{box}(t_i,t_i^*)+\lambda_2p_i^*L_{pts}(l_i,l_i^*)+\lambda_3p_i^*L_{pixel}$
 
-  - 人脸分类损失 $L_{cls}(p_i,p_i^*)$
+  其中：
 
-    $p_i$是预测第$i$个anchor中存在人脸的概率，$p_i^*=1/0$，$L_{cls}$为二分类的softmax loss
+  - 损失权重$\lambda_{1,2,3}=0.24, 0.1, 0.01$
+
+  - 人脸预测损失 $L_{cls}(p_i,p_i^*)$
+
+    $L_{cls}$为二分类的softmax loss
+
+    $p_i$是预测第$i$个anchor中存在人脸的概率，$p_i^*$为实际标注的标签1/0
 
   - 人脸边框回归损失 $L_{box}(t_i,t_i^*)$
 
-    $t_i=\{t_x,t_y,t_w,t_h\}$，$t_i^*$是预测, 实际的边界框，$L_{box}$是[fast rcnn](https://arxiv.org/abs/1504.08083)所定义的$R(t_i-t_i^*)$
+    $L_{box}$是[fast rcnn](https://arxiv.org/abs/1504.08083)所定义的$smooth_{L_1}$损失函数，$smooth_{L_1}(x)=\begin{cases} 0.5x^2, if |x|<1 \\ |x|-0.5, others\end{cases}$
+
+    $t_i=\{t_x,t_y,t_w,t_h\}$是预测的边界框，$t_i^*$是实际的边界框
 
   - 面部关键点回归损失$L_{pts}(l_i,l_i^*)$
 
-    $l_i=\{l_{x1},l_{y1},...,l_{x5},l_{y5}\}$，$l_i^*$是正例的预测, 实际的关键点坐标
+    $l_i=\{l_{x1},l_{y1},...,l_{x5},l_{y5}\}$，$l_i^*$是正例的预测、实际的关键点坐标
 
   - Dense回归损失$L_{pixel}$
 
     $L_{pixel}=\frac{1}{W*H}\sum_i^W\sum_j^H||R(D_{PST},P_{cam},P_{ill})_{(i,j)}-I_{(I,J)}^*||_1$
+
+- **实验细节**
+
+  - 网络结构
+
+  <img src="face research/1.jpg" width="1000px">
+
+  - 数据集：WIDER FACE
+
+    额外标注：面部的5个关键点（双眼中心+鼻尖+嘴角）
+
+    <img src="face research/28.jpg" width="400px">
+
+  - 实现细节
+
+    1. Feature Pyramid：采用特征金字塔P2-P5，它们分别从ResNet的残差层C2-C5中计算得来。C1-C5是预训练的ResNet网络分类网络。P6通过Xavier方法进行随机初始化
+
+    2. Context module：在每层特征金字塔上都使用独立的context modules，以增大接收域，加强上下文建模能力。将所有3x3卷积替换为可变性卷积，进一步加强非固定上下文建模能力。
+
+    3. Loss Head：对于负例，仅使用预测损失。对于正例，使用上述多任务损失函数。同时，在P2-P6上每层都应用独立的context module，即一个预训练的[mesh decoder](https://arxiv.org/abs/1904.03525)，用于对面部三维信息（形状、色彩）进行重建
+
+       <img src="face research/29.jpg" width="600px">
+
+    4. Anchor settings：在特征金字塔的每层应用不同大小的锚框。P2层用于获取尺度小的面部，每个特征点出生成的锚框尺寸极小，分别为$16,16*2^{1/3},16*2^{1/3}*2^{1/3}$，长宽比为$1:1$。后面每层锚框信息如下，对640x640的输入，总共102300个锚框。
+
+       <img src="face research/30.jpg" width="300px">
+
+       在训练中，当$IoU>0.5$时，锚框与基准边框进行匹配，当$IoU<0.3$时，认为锚框内容为背景。$IoU$在0.3~0.5之间的未匹配锚框则直接忽略。在这一匹配过程，99%以上的锚框都将被认为是背景，这造成了类别不平衡问题。使用OHEM(online hard example mining)方法来缓解该问题，即根据背景锚框的损失值进行排序，挑选损失最大的部分，使得正负样本比例约为$3:1$。
+
+    5. Data Augmentation：a. 随机裁剪原图中极小的面部区域并将调整这些区域的尺寸为640x640以产生更大的脸。b. 以0.5的概率随机进行水平翻转和颜色扭曲
+
+    6. Training details：使用SGD进行驯良，momentum参数0.9，权重衰减0.0005，批量大小8x4,。学习率从1e-3，在5epochs后上升到1e-2，在55和68epochs时除以10。在80epochs时停止学习
+    7. Testing details
+
+  - 各个监督信号的精度
+
+    1. Face Box Accuracy
+
+       <img src="face research/31.jpg" width="500px">
+
+    2. Five Facial Landmark Accuracy
+
+       <img src="face research/32.jpg" width="450px">
+
+    3. Dense Facial Landmark Accuracy
+
+       <img src="face research/33.jpg" width="550px">
+
+    4. Face Recognition Accuracy：人脸检测方法对人脸识别精度的影响
+
+       <img src="face research/34.jpg" width="350px">
